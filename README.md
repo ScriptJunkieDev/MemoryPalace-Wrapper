@@ -3,7 +3,7 @@
 Starter project with:
 - Spring Boot API in `spring-api`
 - FastAPI Python adapter in `python-adapter`
-- GitHub Actions workflow that builds the Spring jar from `spring-api`
+- GitHub Actions workflow that builds the Spring jar and publishes a Docker image to GitHub Container Registry
 - Dockerfile that packages both layers into one container
 
 ## Build locally
@@ -23,6 +23,39 @@ docker build -t mempalace-wrapper .
 ```bash
 docker run --rm -p 8080:8080 mempalace-wrapper
 ```
+
+## Publish container from GitHub
+
+The workflow at `.github/workflows/docker.yml` publishes to:
+
+```text
+ghcr.io/<github-owner>/memorypalace-wrapper:latest
+```
+
+After you push to `main` or `master`, GitHub Actions will:
+1. build the Spring Boot jar from `spring-api`
+2. build the Docker image
+3. push it to GitHub Container Registry
+
+### Important
+GitHub Container Registry packages are often private by default.
+If Pterodactyl should pull the image without registry credentials, make the package public in GitHub Packages.
+
+## Use in Pterodactyl
+
+Set the Docker image in your egg/server to:
+
+```text
+ghcr.io/<github-owner>/memorypalace-wrapper:latest
+```
+
+Typical startup command:
+
+```bash
+bash /home/container/start.sh
+```
+
+See `docs/pterodactyl.md` for a quick setup note.
 
 ## Endpoints
 - `GET /api/memory/status`
