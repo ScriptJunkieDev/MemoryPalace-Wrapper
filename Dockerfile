@@ -6,7 +6,8 @@ WORKDIR /home/container
 
 RUN python3 -m venv /home/container/pyenv
 RUN /home/container/pyenv/bin/pip install --upgrade pip setuptools wheel
-RUN /home/container/pyenv/bin/pip install fastapi uvicorn[standard] pydantic
+COPY python-adapter/requirements.txt /tmp/requirements.txt
+RUN /home/container/pyenv/bin/pip install -r /tmp/requirements.txt
 
 COPY spring-api/target/memory-api-0.0.1-SNAPSHOT.jar /home/container/app.jar
 COPY python-adapter/ /home/container/python-adapter/
